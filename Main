@@ -1,0 +1,152 @@
+package TestExercise;
+/**
+ * Создай консольное приложение “Калькулятор”.
+ * Приложение должно читать из консоли введенные пользователем строки, числа, арифметические
+ * операции проводимые между ними и выводить в консоль результат их выполнения.
+ * Реализуй класс Main с методом public static String calc(String input).
+ * Метод должен принимать строку с арифметическим выражением между двумя числами и возвращать строку
+ * с результатом их выполнения. Ты можешь добавлять свои импорты, классы и методы.
+ * Добавленные классы не должны иметь модификаторы доступа (public или другие)
+ */
+
+
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Scanner scannerinput = new Scanner(System.in);
+        String line = scannerinput.nextLine(); //считываем строку
+        String[] data = line.split(" "); //разбиваем строку на два аргумента
+        if (data.length !=3) throw new Exception("Требуется вводить только два числа");
+        String firstNumber = data[0];
+        String secondNumber = data[2];
+        String[] romanNumbers = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+        String[] arabicNumbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        boolean isFirstNumberIsRoman = false;
+        int IndexFirstRoman = 0;
+        for (int i = 0; i < romanNumbers.length; i++) { //проверка числа на наличие римских цифр в первом введенном числе
+
+            if (romanNumbers[i].equals(firstNumber)) {
+                isFirstNumberIsRoman = true;
+                IndexFirstRoman = i;
+            }
+        }
+
+        boolean isSecondNumberIsRoman = false;
+        int IndexSecondRoman = 0;
+        for (int i = 0; i < romanNumbers.length; i++) { //проверка числа на наличие римских цифр во втором введенном числе
+
+            if (romanNumbers[i].equals(secondNumber)) {
+                isSecondNumberIsRoman = true;
+                IndexSecondRoman = i;
+            }
+        }
+        boolean isFirstNumberIsArabic = false;
+        int IndexFirstArabic = 0;
+        for (int i = 0; i < romanNumbers.length; i++) { //проверка числа на наличие арабских цифр в первом введенном числе
+
+            if (arabicNumbers[i].equals(firstNumber)) {
+                isFirstNumberIsArabic = true;
+                IndexFirstArabic = i;
+            }
+        }
+
+        boolean isSecondNumberIsArabic = false;
+        int IndexSecondArabic = 0;
+        for (int i = 0; i < romanNumbers.length; i++) { //проверка числа на наличие арабских цифр во втором введенном числе
+
+            if (arabicNumbers[i].equals(secondNumber)) {
+                isSecondNumberIsArabic = true;
+                IndexSecondArabic = i;
+            }
+        }
+        if (isFirstNumberIsRoman && isSecondNumberIsRoman) {
+            String action = data[1];
+            romanCalc(IndexFirstRoman, IndexSecondRoman, action);
+        } else if (isFirstNumberIsArabic && isSecondNumberIsArabic) {
+            int isFirstActionNumber = Integer.parseInt(data[0]);
+            int isSecondActionNumber = Integer.parseInt(data[2]);
+            String action = data[1];
+            arabicCalc(isFirstActionNumber, isSecondActionNumber, action);
+        } else {
+            throw new Exception("Неверный ввод");
+        }
+    }
+
+     static int arabicCalc(int isFirstActionNumber, int isSecondActionNumber, String action) throws Exception { //арабский калькулятор
+        int resultArabic = 0;
+        if (action.equals("+")) {
+            resultArabic = isFirstActionNumber + isSecondActionNumber;
+            System.out.println(resultArabic);
+        } else if (action.equals("-")) {
+            resultArabic = isFirstActionNumber - isSecondActionNumber;
+            System.out.println(resultArabic);
+        } else if (action.equals("*")) {
+            resultArabic = isFirstActionNumber * isSecondActionNumber;
+            System.out.println(resultArabic);
+        } else if (action.equals("/")) {
+            resultArabic = isFirstActionNumber / isSecondActionNumber;
+            System.out.println(resultArabic);
+        } else {
+            throw new Exception("Недопустимое действие");
+        }
+        return resultArabic;
+    }
+
+    static int romanCalc(int IndexFirstRoman, int IndexSecondRoman, String action) throws Exception { //римский калькулятор
+        IndexFirstRoman++;
+        IndexSecondRoman++;
+        int result = 0;
+        if (action.equals("+")) {
+            result = IndexFirstRoman + IndexSecondRoman;
+            convertToRoman(result);
+        } else if (action.equals("-")) {
+            result = IndexFirstRoman - IndexSecondRoman;
+            convertToRoman(result);
+        } else if (action.equals("*")) {
+            result = IndexFirstRoman * IndexSecondRoman;
+            convertToRoman(result);
+        } else if (action.equals("/")) {
+            result = IndexFirstRoman / IndexSecondRoman;
+            convertToRoman(result);
+        } else {
+            throw new Exception("Недопустимое действие");
+        }
+        return result;
+    }
+
+    static void convertToRoman(int result) throws Exception { //перевод результата в римские цифры
+        TreeMap<Integer, String> romanMap = new TreeMap<>();
+        romanMap.put(100, "C");
+        romanMap.put(90, "XC");
+        romanMap.put(50, "L");
+        romanMap.put(40, "XL");
+        romanMap.put(10, "X");
+        romanMap.put(9, "IX");
+        romanMap.put(5, "V");
+        romanMap.put(4, "IV");
+        romanMap.put(1, "I");
+        String romanNumber = "";
+        int arabicKey;
+        if (result == 0 || result < 0) {
+            throw new Exception("Некорректный результат для римских цифр");
+        } else do {
+            arabicKey = romanMap.floorKey(result);
+            romanNumber = romanNumber + romanMap.get(arabicKey);
+            result = result - arabicKey;
+        } while (result != 0);
+        {
+            System.out.println(romanNumber);
+        }
+
+    }
+}
+
+
+
+
+
+
+
+
